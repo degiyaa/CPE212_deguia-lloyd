@@ -19,14 +19,13 @@
       community.docker.docker_container:
         name: web-db-server-container
         state: stopped
-      ignore_errors: true # Ignore if the container doesn't exist
+      ignore_errors: true
 
-    # NEW STEP 2: Ensure the container is removed (if it existed)
     - name: Ensure existing container is removed
       community.docker.docker_container:
         name: web-db-server-container
         state: absent
-      ignore_errors: true # Ignore if the container doesn't exist
+      ignore_errors: true
 
     - name: Run the built container
       community.docker.docker_container:
@@ -34,5 +33,5 @@
         image: web-db-server-image:latest
         state: started
         ports:
-          - "8080:80" # Map host port 8080 to container port 80
+          - "8080:80"
         restart_policy: always
