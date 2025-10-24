@@ -1,0 +1,14 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt update && \
+    apt install -y apache2 mariadb-client procps vim && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY index.html /var/www/html/
+
+EXPOSE 80
+
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

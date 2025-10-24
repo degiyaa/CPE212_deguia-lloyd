@@ -1,0 +1,38 @@
+---
+- name: Build and Manage Docker Image
+  hosts: workstation
+  become: yes
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Ensure Docker image is built
+      community.docker.docker_image:
+        build:
+          path: .
+          dockerfile: Dockerfile
+        name: web-db-server-image
+        tag: latest
+        state: present
+        source: build
+
+    - name: Ensure existing container is stopped
+      community.docker.docker_container:
+        name: web-db-server-container
+        state: stopped
+      ignore_errors: true # Ignore if the container doesn't exist
+
+    # NEW STEP 2: Ensure the container is removed (if it existed)
+    - name: Ensure existing container is removed
+      community.docker.docker_container:
+        name: web-db-server-container
+        state: absent
+      ignore_errors: true # Ignore if the container doesn't exist
+
+    - name: Run the built container
+      community.docker.docker_container:
+        name: web-db-server-container
+        image: web-db-server-image:latest
+        state: started
+        ports:
+          - "8080:80" # Map host port 8080 to container port 80
+        restart_policy: always
