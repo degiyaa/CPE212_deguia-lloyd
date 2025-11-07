@@ -1,0 +1,37 @@
+---
+- name: Deploy Docker container on all VMs
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Docker (CentOS)
+      when: ansible_os_family == "RedHat"
+      package:
+        name: docker
+        state: present
+
+    - name: Install Docker (Ubuntu)
+      when: ansible_os_family == "Debian"
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Start docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull portfolio-webapp image
+      community.docker.docker_image:
+        name: portfolio-webapp
+        source: pull
+
+    - name: Run portfolio-webapp container
+      community.docker.docker_container:
+        name: portfolio-webapp
+        image: portfolio-webapp:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"

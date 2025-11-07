@@ -1,0 +1,15 @@
+---
+- name: Build docker image for web app
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Build docker image
+      community.docker.docker_image:
+        name: portfolio-webapp
+        tag: latest
+        build:
+          path: .
+          dockerfile: Dockerfile
+        source: build
+        force_source: yes
