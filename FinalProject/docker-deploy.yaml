@@ -5,7 +5,7 @@
   tasks:
     - name: Install Docker (CentOS)
       when: ansible_os_family == "RedHat"
-      package:
+      dnf:
         name: docker
         state: present
 
@@ -21,16 +21,25 @@
         name: docker
         state: started
         enabled: yes
+      when: "'ubuntu' in group_names"
 
-    - name: Pull portfolio-webapp image
+    - name: Copy docker tarball to remote host
+      copy:
+        src: "{{ playbook_dir }}/portfolio-webapp.tar"
+        dest: /tmp/portfolio-webapp.tar
+
+    - name: Load docker image
       community.docker.docker_image:
-        name: portfolio-webapp
-        source: pull
+        name: docker.io/library/portfolio-webapp:latest
+        tag: latest
+        source: load
+        load_path: /tmp/portfolio-webapp.tar
+        state: present
 
     - name: Run portfolio-webapp container
       community.docker.docker_container:
         name: portfolio-webapp
-        image: portfolio-webapp:latest
+        image: docker.io/library/portfolio-webapp:latest
         state: started
         restart_policy: always
         ports:
