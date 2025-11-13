@@ -3,11 +3,16 @@
   hosts: all
   become: yes
   tasks:
-    - name: Install Docker (CentOS)
+    - name: Check if docker installed (CentOS)
       when: ansible_os_family == "RedHat"
-      dnf:
-        name: docker
-        state: present
+      command: docker --version
+      register: docker_installed
+      ignore_errors: true
+
+    - name: Install Docker (CentOS)
+      when: ansible_os_family == "RedHat" and docker_installed.failed
+      shell: |
+        curl -fsSL https://get.docker.com/ | sh
 
     - name: Install Docker (Ubuntu)
       when: ansible_os_family == "Debian"
@@ -21,7 +26,6 @@
         name: docker
         state: started
         enabled: yes
-      when: "'ubuntu' in group_names"
 
     - name: Copy docker tarball to remote host
       copy:

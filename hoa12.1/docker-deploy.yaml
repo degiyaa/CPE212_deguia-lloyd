@@ -1,0 +1,51 @@
+---
+- name: Deploy Docker container on all VMs
+  hosts: all
+  become: yes
+  tasks:
+    - name: Check if docker installed (CentOS)
+      when: ansible_os_family == "RedHat"
+      command: docker --version
+      register: docker_installed
+      ignore_errors: true
+
+    - name: Install Docker (CentOS)
+      when: ansible_os_family == "RedHat" and docker_installed.failed
+      shell: |
+        curl -fsSL https://get.docker.com/ | sh
+
+    - name: Install Docker (Ubuntu)
+      when: ansible_os_family == "Debian"
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Start docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+      when: "'ubuntu' in group_names"
+
+    - name: Copy docker tarball to remote host
+      copy:
+        src: "{{ playbook_dir }}/hoa12-webapp.tar"
+        dest: /tmp/hoa12-webapp.tar
+
+    - name: Load docker image
+      community.docker.docker_image:
+        name: docker.io/library/hoa12-webapp:latest
+        tag: latest
+        source: load
+        load_path: /tmp/hoa12-webapp.tar
+        state: present
+
+    - name: Run hoa12-webapp container
+      community.docker.docker_container:
+        name: hoa12-webapp
+        image: docker.io/library/hoa12-webapp:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"

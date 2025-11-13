@@ -1,0 +1,27 @@
+---
+- name: Build docker image for web app
+  hosts: localhost
+  gather_facts: yes
+  become: yes
+  connection: local
+  tasks:
+    - name: Install docker
+      when: ansible_os_family == "Debian"
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Build docker image
+      community.docker.docker_image:
+        name: hoa12-webapp
+        tag: latest
+        build:
+          path: .
+          dockerfile: Dockerfile
+          nocache: yes
+        source: build
+        force_source: yes
+
+    - name: Save docker to tarball
+      command: docker save hoa12-webapp:latest -o ./hoa12-webapp.tar
