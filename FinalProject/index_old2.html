@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Academic Portfolio</title>
+  <style>
+    :root{
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --muted: #5d6670;
+      --accent: #6c5ce7;
+      --good: #16a34a;
+      --warn: #d97706;
+      --bad: #ef4444;
+      --glass: rgba(108,92,231,0.08);
+      --radius: 12px;
+      --shadow: 0 6px 20px rgba(17,24,39,0.06);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#eef2f6 60%);color:#111827}
+    .wrap{max-width:1100px;margin:36px auto;padding:28px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    h1{font-size:22px;margin:0;color:var(--accent)}
+    p.sub{margin:0;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:1px solid rgba(15,23,42,0.04)}
+    .card-head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px}
+    .avatar{width:58px;height:58px;border-radius:10px;background:linear-gradient(135deg,var(--glass),transparent);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);font-size:20px}
+    .meta{flex:1}
+    .meta h2{margin:0;font-size:16px}
+    .meta .role{display:inline-block;margin-top:6px;padding:6px 10px;border-radius:999px;font-size:12px;color:#fff;background:var(--muted);}
+    .meta .role.lead{background:var(--accent)}
+    .card-body{padding:12px 18px 18px}
+    .activity{border-radius:10px;padding:10px;background:linear-gradient(180deg, rgba(99,102,241,0.03), transparent);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .activity .left{flex:1}
+    .activity .title{font-weight:600;color:#0f172a;margin-bottom:4px}
+    .activity .desc{font-size:13px;color:var(--muted)}
+    .activity-link, .activity-link:visited {color: inherit !important; text-decoration: none !important;}
+    .score{min-width:110px;text-align:right;font-weight:700}
+    .score small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+    .status-good{color:var(--good)}
+    .status-warn{color:var(--warn)}
+    .status-bad{color:var(--bad)}
+    .footer{margin-top:18px;padding-top:12px;border-top:1px dashed rgba(15,23,42,0.04);font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
+    details{background:transparent;border:none}
+    summary{list-style:none;cursor:pointer}
+    
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Group Portfolio</h1>
+        <p class="sub">Final Project: Static Web Application Portfolio</p>
+      </div>
+    </header>
+
+    <main class="grid">
+
+<!-- DE GUIA -->
+      <article id="person-1" class="card">
+        <div class="card-head">
+          <div class="avatar">P1</div>
+          <div class="meta">
+            <h2><span class="name-token">LLOYD JAMES DE GUIA</span></h2>
+            <span class="role lead"><span class="role-token">Project Leader</span></span>
+          </div>
+        </div>
+        <div class="card-body">
+
+<!-- INSERT HERE -->
+          <a href="" class="activity-link" target="_blank" style="display:block; text-decoration:none;">
+            <div class="activity">
+              <div class="left">
+                <div class="title">HOA</div>
+                <div class="desc">Description Here</div>
+              </div>
+              <div class="score status-good"><span class="score-token">Grade</span><small>Grade (out of)</small></div>
+            </div>
+          </a>
+
+          <a href="" class="activity-link" target="_blank" style="display:block; text-decoration:none;">
+            <div class="activity">
+              <div class="left">
+                <div class="title">EXAM</div>
+                <div class="desc">Description Here</div>
+              </div>
+              <div class="score status-good"><span class="score-token">Grade</span><small>Grade (out of)</small></div>
+            </div>
+          </a>
+
+          <div class="footer"><div>Reflection: <em>Insert Reflection Here</em></div>
+
+        </div>
+      </article>
+
+<!-- DE GUZMAN -->
+      <article id="person-2" class="card">
+        <div class="card-head">
+          <div class="avatar">P2</div>
+          <div class="meta">
+            <h2><span class="name-token">Alastair N. De Guzman</span></h2>
+            <span class="role"><span class="role-token">Project Member</span></span>
+          </div>
+        </div>
+        <div class="card-body">
+
+<!-- INSERT HERE -->
+          <a href="" class="activity-link" target="_blank" style="display:block; text-decoration:none;">
+            <div class="activity">
+              <div class="left">
+                <div class="title">HOA</div>
+                <div class="desc">Description Here</div>
+              </div>
+              <div class="score status-good"><span class="score-token">Grade</span><small>Grade (out of)</small></div>
+            </div>
+          </a>
+
+          <a href="" class="activity-link" target="_blank" style="display:block; text-decoration:none;">
+            <div class="activity">
+              <div class="left">
+                <div class="title">EXAM</div>
+                <div class="desc">Description Here</div>
+              </div>
+              <div class="score status-good"><span class="score-token">Grade</span><small>Grade (out of)</small></div>
+            </div>
+          </a>
+
+          <div class="footer"><div>Reflection: <em>Insert Reflection Here</em></div>
+
+        </div>
+      </article>
+
+<!-- PABILAN -->
+      <article id="person-3" class="card">
+        <div class="card-head">
+          <div class="avatar">P3</div>
+          <div class="meta">
+            <h2><span class="name-token">Gabriel Pabilan</span></h2>
+            <span class="role"><span class="role-token">Project Member</span></span>
+          </div>
+        </div>
+        <div class="card-body">
+
+<!-- INSERT HERE -->
+          <a href="" class="activity-link" target="_blank" style="display:block; text-decoration:none;">
+            <div class="activity">
+              <div class="left">
+                <div class="title">HOA</div>
+                <div class="desc">Description Here</div>
+              </div>
+              <div class="score status-good"><span class="score-token">Grade</span><small>Grade (out of)</small></div>
+            </div>
+          </a>
+
+          <a href="" class="activity-link" target="_blank" style="display:block; text-decoration:none;">
+            <div class="activity">
+              <div class="left">
+                <div class="title">EXAM</div>
+                <div class="desc">Description Here</div>
+              </div>
+              <div class="score status-good"><span class="score-token">Grade</span><small>Grade (out of)</small></div>
+            </div>
+          </a>
+
+          <div class="footer"><div>Reflection: <em>Insert Reflection Here</em></div>
+
+        </div>
+      </article>
+
+    </main>
+
+    <footer style="text-align:center;margin-top:30px;color:var(--muted);font-size:13px">© 2025 — Automating Server Management</footer>
+  </div>
+
+</body>
+</html>
