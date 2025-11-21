@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Academic Portfolio - Student Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Poppins", "Segoe UI", sans-serif;
+      background: #f4f7fb;
+      color: #333;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #06beb6, #48b1bf);
+      color: white;
+      text-align: center;
+      border-radius: 16px;
+      padding: 40px 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    header h1 { font-size: 2.4em; margin-bottom: 8px; }
+    header p { font-size: 1.05em; opacity: 0.95; }
+
+    .members-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 30px;
+    }
+
+    .member-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .member-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+    }
+
+    .member-header {
+      background: #48b1bf;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .member-header h2 { font-size: 1.6em; }
+    .member-header p { opacity: 0.9; }
+
+    .member-content { padding: 20px; }
+
+    .member-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .avg { font-weight: 700; color: #0a7275; }
+
+    .assessment-section { margin-bottom: 20px; }
+    .assessment-section h3 {
+      border-bottom: 2px solid #48b1bf;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+      color: #0a7275;
+      font-size: 1em;
+    }
+
+    .assessment-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+    }
+    .assessment-item {
+      background: #f8fbfc;
+      border-left: 4px solid #48b1bf;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .assessment-item:hover { background: #eef7f8; }
+
+    .label { font-size: 0.8em; color: #555; font-weight: 600; }
+    .score { font-size: 1.3em; color: #0a7275; font-weight: 800; }
+
+    .artifact-link {
+      margin-top: 4px;
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8em;
+      text-decoration: none;
+      background: #48b1bf;
+      color: white;
+      transition: background 0.2s;
+    }
+    .artifact-link:hover { background: #3797a4; }
+
+    footer {
+      background: #0a7275;
+      color: white;
+      text-align: center;
+      padding: 25px;
+      border-radius: 16px;
+      margin-top: 40px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .stat-box {
+      background: rgba(255,255,255,0.12);
+      padding: 12px;
+      border-radius: 10px;
+    }
+    .number { font-size: 1.6em; font-weight: 800; }
+
+    /* Modal */
+    .modal {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .modal.show { display: flex; }
+    .viewer {
+      width: 90%;
+      height: 85%;
+      background: white;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .viewer .controls {
+      background: #0a7275;
+      color: white;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .viewer iframe {
+      flex: 1;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📘 Student Academic Dashboard</h1>
+    <p>Overview of performance — click items to view documents</p>
+  </header>
+
+  <div class="members-container" id="membersContainer"></div>
+
+  <footer>
+    <div>&copy; 2025 Academic Records System</div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="number" id="totalMembers">0</div>
+        <div>Total Members</div>
+      </div>
+      <div class="stat-box">
+        <div class="number" id="avgScore">0%</div>
+        <div>Average Score</div>
+      </div>
+      <div class="stat-box">
+        <div class="number" id="totalAssessments">0</div>
+        <div>Total Assessments</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal Viewer -->
+  <div id="modal" class="modal">
+    <div class="viewer">
+      <div class="controls">
+        <div id="docTitle">Document</div>
+        <div>
+          <a id="openInNew" class="artifact-link" target="_blank" rel="noopener">Open in new tab</a>
+          <button onclick="closeModal()" class="artifact-link" style="background:#ff6b6b;">Close</button>
+        </div>
+      </div>
+      <iframe id="pdfFrame" src=""></iframe>
+    </div>
+  </div>
+
+  <script>
+    const members = [
+      {
+        id: 1, name: "Liam Santos", studentId: "2025-001",
+        assessments: [
+          {title: "Prelim HOA", url: "https://example.com/liam_prelim.pdf", score: 85},
+          {title: "Prelim HOA", url: "https://example.com/ethan_prelim.pdf", score: 80},
+          {title: "Prelim HOA", url: "https://example.com/ethan_prelim.pdf", score: 80},
+          {title: "Prelim HOA", url: "https://example.com/sophia_prelim.pdf", score: 92},
+          {title: "Midterm HOA", url: "https://example.com/liam_mid.pdf", score: 88},
+          {title: "Finals HOA", url: "https://example.com/liam_final.pdf", score: 90},
+          {title: "Prelim Exam", url: "https://canvas.example.edu/assignments/34", score: 82, external: true},
+          {title: "Midterm Exam", url: "https://canvas.example.edu/assignments/56", score: 86, external: true},
+          {title: "Final Exam", url: "https://example.com/liam_final_exam.pdf", score: 89}
+        ]
+      },
+      {
+        id: 2, name: "Sophia Dela Cruz", studentId: "2025-002",
+        assessments: [
+          {title: "Prelim HOA", url: "https://example.com/sophia_prelim.pdf", score: 92},
+          {title: "Prelim HOA", url: "https://example.com/ethan_prelim.pdf", score: 80},
+          {title: "Prelim HOA", url: "https://example.com/ethan_prelim.pdf", score: 80},
+          {title: "Prelim HOA", url: "https://example.com/sophia_prelim.pdf", score: 92},
+          {title: "Midterm HOA", url: "https://example.com/sophia_mid.pdf", score: 90},
+          {title: "Finals HOA", url: "https://example.com/sophia_final.pdf", score: 94},
+          {title: "Prelim Exam", url: "https://canvas.example.edu/assignments/40", score: 88, external:true},
+          {title: "Midterm Exam", url: "https://canvas.example.edu/assignments/60", score: 91, external:true},
+          {title: "Final Exam", url: "https://example.com/sophia_final_exam.pdf", score: 93}
+        ]
+      },
+      {
+        id: 3, name: "Ethan Mendoza", studentId: "2025-003",
+        assessments: [
+          {title: "Prelim HOA", url: "https://example.com/ethan_prelim.pdf", score: 80},
+          {title: "Prelim HOA", url: "https://example.com/ethan_prelim.pdf", score: 80},
+          {title: "Prelim HOA", url: "https://example.com/ethan_prelim.pdf", score: 80},
+          {title: "Prelim HOA", url: "https://example.com/sophia_prelim.pdf", score: 92},
+          {title: "Midterm HOA", url: "https://example.com/ethan_mid.pdf", score: 83},
+          {title: "Finals HOA", url: "https://example.com/ethan_final.pdf", score: 87},
+          {title: "Prelim Exam", url: "https://canvas.example.edu/assignments/41", score: 79, external:true},
+          {title: "Midterm Exam", url: "https://canvas.example.edu/assignments/61", score: 84, external:true},
+          {title: "Final Exam", url: "https://example.com/ethan_final_exam.pdf", score: 88}
+        ]
+      }
+    ];
+
+    function renderMembers(){
+      const container = document.getElementById('membersContainer');
+      container.innerHTML = '';
+      let totalAvg = 0, totalAssessments = 0;
+
+      members.forEach(m => {
+        const scores = m.assessments.map(a => a.score);
+        const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+        totalAvg += avg; totalAssessments += scores.length;
+        const hoa = m.assessments.filter(a=>/HOA/i.test(a.title));
+        const exams = m.assessments.filter(a=>/Exam/i.test(a.title));
+
+        const card = document.createElement('div');
+        card.className = 'member-card';
+        card.innerHTML = `
+          <div class="member-header">
+            <h2>${m.name}</h2>
+            <p>ID: ${m.studentId}</p>
+          </div>
+          <div class="member-content">
+            <div class="member-meta">
+              <div>Total Artifacts: <strong>${m.assessments.length}</strong></div>
+              <div class="avg">Avg: ${avg.toFixed(1)}%</div>
+            </div>
+
+            <div class="assessment-section">
+              <h3>🧩 Hands-On Activities</h3>
+              <div class="assessment-items">${hoa.map(renderAssessment).join('')}</div>
+            </div>
+
+            <div class="assessment-section">
+              <h3>📈 Exams</h3>
+              <div class="assessment-items">${exams.map(renderAssessment).join('')}</div>
+            </div>
+          </div>`;
+        container.appendChild(card);
+      });
+
+      document.getElementById('totalMembers').textContent = members.length;
+      document.getElementById('avgScore').textContent = (totalAvg/members.length).toFixed(0) + '%';
+      document.getElementById('totalAssessments').textContent = totalAssessments;
+      attachHandlers();
+    }
+
+    function renderAssessment(a){
+      const icon = a.external ? '🔗' : '📄';
+      return `
+        <div class="assessment-item">
+          <div class="label">${a.title}</div>
+          <div class="score">${a.score}</div>
+          <a class="artifact-link" data-url="${a.url}" data-external="${a.external ? 1 : 0}">
+            ${icon} Open
+          </a>
+        </div>`;
+    }
+
+    function attachHandlers(){
+      document.querySelectorAll('.artifact-link').forEach(btn=>{
+        btn.onclick = e=>{
+          e.preventDefault();
+          const url = btn.dataset.url;
+          if(btn.dataset.external==='1' || !url.endsWith('.pdf')){
+            window.open(url,'_blank');
+          } else {
+            openModal(url);
+          }
+        };
+      });
+    }
+
+    const modal = document.getElementById('modal');
+    const pdfFrame = document.getElementById('pdfFrame');
+    const openInNew = document.getElementById('openInNew');
+    const docTitle = document.getElementById('docTitle');
+
+    function openModal(url){
+      pdfFrame.src = url;
+      openInNew.href = url;
+      docTitle.textContent = url.split('/').pop();
+      modal.classList.add('show');
+    }
+    function closeModal(){
+      modal.classList.remove('show');
+      pdfFrame.src = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', renderMembers);
+  </script>
+</body>
+</html>
